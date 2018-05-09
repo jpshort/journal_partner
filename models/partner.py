@@ -22,4 +22,18 @@ class AccountInvoice(models.Model):
         if self.partner_id:
             if self.type in ('out_invoice', 'out_refund'):
                 self.journal_id = self.partner_id.journal_id.id
+
+    @api.model
+    def create(self, vals):
+
+        res = super(AccountInvoice, self).create(vals)
+        
+        if res.partner_id.sale_fiscal_type:
+            res.sale_fiscal_type = res.partner_id.sale_fiscal_type
+		
+        if res.partner_id.journal_id:
+            res.journal_id = res.partner_id.journal_id
+
+        return res				
+        	           
         	           
